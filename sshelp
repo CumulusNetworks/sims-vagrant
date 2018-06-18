@@ -27,11 +27,13 @@ usage()
     echo "will provide a more flexible solution; however, you\'ll have to manage "
     echo "the setup/cleanup manually."
     echo
+    echo "Host <DIRECTORY>"
+    echo "    HostName <IP address from $(vagrant ssh-config oob-mgmt-server)"
+    echo "    User cumulus"
     echo "    ForwardAgent yes"
     echo "    ForwardX11 yes"
     echo "    StrictHostKeyChecking no"
     echo "    UserKnownHostsFile /dev/null"
-    echo "    User cumulus"
     echo "    LogLevel FATAL"
     echo 
     exit 1
