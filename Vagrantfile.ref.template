@@ -103,7 +103,7 @@ Vagrant.configure("2") do |config|
 
     device.vm.provider :libvirt do |v|
       v.memory = 4096
-      v.random_hostname = yes
+      v.random_hostname = true
     end
     #   see note here: https://github.com/pradels/vagrant-libvirt#synced-folders
     device.vm.synced_folder ".", "/vagrant", disabled: true
@@ -197,7 +197,7 @@ end
 
     device.vm.provider :libvirt do |v|
       v.memory = 512
-      v.random_hostname = yes
+      v.random_hostname = true
     end
     #   see note here: https://github.com/pradels/vagrant-libvirt#synced-folders
     device.vm.synced_folder ".", "/vagrant", disabled: true
@@ -404,7 +404,7 @@ end
 
     device.vm.provider :libvirt do |v|
       v.memory = 1024
-      v.random_hostname = yes
+      v.random_hostname = true
     end
     #   see note here: https://github.com/pradels/vagrant-libvirt#synced-folders
     device.vm.synced_folder ".", "/vagrant", disabled: true
@@ -548,7 +548,7 @@ end
 
     device.vm.provider :libvirt do |v|
       v.memory = 1024
-      v.random_hostname = yes
+      v.random_hostname = true
     end
     #   see note here: https://github.com/pradels/vagrant-libvirt#synced-folders
     device.vm.synced_folder ".", "/vagrant", disabled: true
@@ -692,7 +692,7 @@ end
 
     device.vm.provider :libvirt do |v|
       v.memory = 1024
-      v.random_hostname = yes
+      v.random_hostname = true
     end
     #   see note here: https://github.com/pradels/vagrant-libvirt#synced-folders
     device.vm.synced_folder ".", "/vagrant", disabled: true
@@ -892,7 +892,7 @@ end
 
     device.vm.provider :libvirt do |v|
       v.memory = 1024
-      v.random_hostname = yes
+      v.random_hostname = true
     end
     #   see note here: https://github.com/pradels/vagrant-libvirt#synced-folders
     device.vm.synced_folder ".", "/vagrant", disabled: true
@@ -1106,7 +1106,7 @@ end
 
     device.vm.provider :libvirt do |v|
       v.memory = 1024
-      v.random_hostname = yes
+      v.random_hostname = true
     end
     #   see note here: https://github.com/pradels/vagrant-libvirt#synced-folders
     device.vm.synced_folder ".", "/vagrant", disabled: true
@@ -1306,7 +1306,7 @@ end
 
     device.vm.provider :libvirt do |v|
       v.memory = 1024
-      v.random_hostname = yes
+      v.random_hostname = true
     end
     #   see note here: https://github.com/pradels/vagrant-libvirt#synced-folders
     device.vm.synced_folder ".", "/vagrant", disabled: true
@@ -1521,7 +1521,7 @@ end
     device.vm.provider :libvirt do |v|
       v.nic_model_type = 'e1000' 
       v.memory = 4096
-      v.random_hostname = yes
+      v.random_hostname = true
     end
     #   see note here: https://github.com/pradels/vagrant-libvirt#synced-folders
     device.vm.synced_folder ".", "/vagrant", disabled: true
@@ -1618,7 +1618,7 @@ end
     device.vm.provider :libvirt do |v|
       v.nic_model_type = 'e1000' 
       v.memory = 1024
-      v.random_hostname = yes
+      v.random_hostname = true
     end
     #   see note here: https://github.com/pradels/vagrant-libvirt#synced-folders
     device.vm.synced_folder ".", "/vagrant", disabled: true
@@ -1715,7 +1715,7 @@ end
     device.vm.provider :libvirt do |v|
       v.nic_model_type = 'e1000' 
       v.memory = 1024
-      v.random_hostname = yes
+      v.random_hostname = true
     end
     #   see note here: https://github.com/pradels/vagrant-libvirt#synced-folders
     device.vm.synced_folder ".", "/vagrant", disabled: true
@@ -1812,7 +1812,7 @@ end
     device.vm.provider :libvirt do |v|
       v.nic_model_type = 'e1000' 
       v.memory = 1024
-      v.random_hostname = yes
+      v.random_hostname = true
     end
     #   see note here: https://github.com/pradels/vagrant-libvirt#synced-folders
     device.vm.synced_folder ".", "/vagrant", disabled: true
