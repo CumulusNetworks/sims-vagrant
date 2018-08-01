@@ -1,16 +1,20 @@
 graph vx {
- "leaf01" [function="leaf" os="CumulusCommunity/cumulus-vx" version="3.4.3" memory="1024" config="./helper_scripts/config_switch.sh" ]
- "leaf02" [function="leaf" os="CumulusCommunity/cumulus-vx" version="3.4.3" memory="1024" config="./helper_scripts/config_switch.sh" ]
- "leaf03" [function="leaf" os="CumulusCommunity/cumulus-vx" version="3.4.3" memory="1024" config="./helper_scripts/config_switch.sh" ]
- "leaf04" [function="leaf" os="CumulusCommunity/cumulus-vx" version="3.4.3" memory="1024" config="./helper_scripts/config_switch.sh" ]
- "spine01" [function="spine" os="CumulusCommunity/cumulus-vx" version="3.4.3" memory="1024" config="./helper_scripts/config_switch.sh" ]
- "spine02" [function="spine" os="CumulusCommunity/cumulus-vx" version="3.4.3" memory="1024" config="./helper_scripts/config_switch.sh" ]
- "server01" [function="host" os="yk0/ubuntu-xenial" memory="4096" config="./helper_scripts/config_server.sh" ]
- "server02" [function="host" os="yk0/ubuntu-xenial" memory="1024" config="./helper_scripts/config_server.sh" ]
- "server03" [function="host" os="yk0/ubuntu-xenial" memory="1024" config="./helper_scripts/config_server.sh" ]
- "server04" [function="host" os="yk0/ubuntu-xenial" memory="1024" config="./helper_scripts/config_server.sh" ]
- "oob-mgmt-switch" [function="oob-switch" vagrant="eth0" os="CumulusCommunity/cumulus-vx" version="3.4.3" memory="512" config="./helper_scripts/config_oob_switch.sh" ]
- "oob-mgmt-server" [function="oob-server" vagrant="eth0" os="cumulus-netq-telemetry-server-1.2.0"  memory="4096" config="./helper_scripts/config_oob_server.sh" ]
+ "leaf01" [function="leaf" os="CL_VERS" memory="1024" ]
+ "leaf02" [function="leaf" os="CL_VERS" memory="1024" ]
+ "leaf03" [function="leaf" os="CL_VERS" memory="1024" ]
+ "leaf04" [function="leaf" os="CL_VERS" memory="1024" ]
+ "spine01" [function="spine" os="CL_VERS" memory="1024" ]
+ "spine02" [function="spine" os="CL_VERS" memory="1024" ]
+ "exit01" [function="exit" os="CL_VERS" memory="1024"]
+ "exit02" [function="exit" os="CL_VERS" memory="1024"]
+ "server01" [function="host" os="yk0/ubuntu-xenial" memory="512" config="./helper_scripts/config_server.sh" ]
+ "server02" [function="host" os="yk0/ubuntu-xenial" memory="512" config="./helper_scripts/config_server.sh" ]
+ "server03" [function="host" os="yk0/ubuntu-xenial" memory="512" config="./helper_scripts/config_server.sh" ]
+ "server04" [function="host" os="yk0/ubuntu-xenial" memory="512" config="./helper_scripts/config_server.sh" ]
+ "edge01" [function="host" os="yk0/ubuntu-xenial" memory="768" config="./helper_scripts/config_server.sh" ]
+ "internet" [function="internet" vagrant="swp48" os="CL_VERS" memory="1024" ]
+ "oob-mgmt-switch" [function="oob-switch" vagrant="eth0" os="CumulusCommunity/cumulus-vx" version="3.5.3" memory="512" config="./helper_scripts/config_oob_switch.sh" ]
+ "oob-mgmt-server" [function="oob-server" vagrant="eth0" os="TS_VERS" memory="4096" config="./helper_scripts/config_oob_server.sh" ]
 
  "leaf01":"swp51" -- "spine01":"swp1"
  "leaf02":"swp51" -- "spine01":"swp2"
@@ -28,6 +32,8 @@ graph vx {
 
  "spine01":"swp31" -- "spine02":"swp31"
  "spine01":"swp32" -- "spine02":"swp32"
+ "exit01":"swp49" -- "exit02":"swp49"
+ "exit01":"swp50" -- "exit02":"swp50"
 
  "server01":"eth1" -- "leaf01":"swp1" [left_mac="00:03:00:11:11:01"]
  "server01":"eth2" -- "leaf02":"swp1" [left_mac="00:03:00:11:11:02"]
@@ -38,16 +44,29 @@ graph vx {
  "server04":"eth1" -- "leaf03":"swp2" [left_mac="00:03:00:44:44:01"]
  "server04":"eth2" -- "leaf04":"swp2" [left_mac="00:03:00:44:44:02"]
 
- "leaf01":"swp44" -- "oob-mgmt-server":"eth2"
+ "exit01":"swp51" -- "spine01":"swp30"
+ "exit01":"swp52" -- "spine02":"swp30"
+ "exit02":"swp51" -- "spine01":"swp29"
+ "exit02":"swp52" -- "spine02":"swp29"
+ "exit01":"swp45" -- "exit01":"swp46"
+ "exit01":"swp47" -- "exit01":"swp48"
+ "exit02":"swp45" -- "exit02":"swp46"
+ "exit02":"swp47" -- "exit02":"swp48"
+
  "leaf01":"swp45" -- "leaf01":"swp46"
  "leaf01":"swp47" -- "leaf01":"swp48"
- "leaf02":"swp44" -- "oob-mgmt-server":"eth3"
  "leaf02":"swp45" -- "leaf02":"swp46"
  "leaf02":"swp47" -- "leaf02":"swp48"
  "leaf03":"swp45" -- "leaf03":"swp46"
  "leaf03":"swp47" -- "leaf03":"swp48"
  "leaf04":"swp45" -- "leaf04":"swp46"
  "leaf04":"swp47" -- "leaf04":"swp48"
+
+ "internet":"swp1" -- "exit01":"swp44"
+ "internet":"swp2" -- "exit02":"swp44"
+
+ "edge01":"eth1" -- "exit01":"swp1"
+ "edge01":"eth2" -- "exit02":"swp1"
 
  "oob-mgmt-server":"eth1" -- "oob-mgmt-switch":"swp1" [right_mac="a0:00:00:00:00:61"]
  "server01":"eth0" -- "oob-mgmt-switch":"swp2" [left_mac="a0:00:00:00:00:31"]
@@ -60,4 +79,8 @@ graph vx {
  "leaf04":"eth0" -- "oob-mgmt-switch":"swp9" [left_mac="a0:00:00:00:00:14"]
  "spine01":"eth0" -- "oob-mgmt-switch":"swp10" [left_mac="a0:00:00:00:00:21"]
  "spine02":"eth0" -- "oob-mgmt-switch":"swp11" [left_mac="a0:00:00:00:00:22"]
+ "exit01":"eth0" -- "oob-mgmt-switch":"swp12" [left_mac="a0:00:00:00:00:41"]
+ "exit02":"eth0" -- "oob-mgmt-switch":"swp13" [left_mac="a0:00:00:00:00:42"]
+ "edge01":"eth0" -- "oob-mgmt-switch":"swp14" [left_mac="a0:00:00:00:00:51"]
+ "internet":"eth0" -- "oob-mgmt-switch":"swp15" [left_mac="a0:00:00:00:00:50"]
 }
