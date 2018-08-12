@@ -69,6 +69,22 @@ EOT
 sudo systemctl enable ntp.service
 sudo systemctl start ntp.service
 
+## NetQ agent
+echo " ### Install NetQ Agent ###"
+apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 0xA88BBC95
+cat << EOF > /etc/apt/sources.list.d/netq.list
+deb [arch=amd64] https://apps3.cumulusnetworks.com/repos/deb xenial netq-1.3
+EOF
+cat << EOF > /etc/lldpd.d/port_info.conf
+configure lldp portidsubtype ifname
+EOF
+apt update
+apt-get install -y cumulus-netq lldpd
+netq config add server 192.168.0.254
+netq config add experimental
+netq config restart agent
+
+
 echo "#################################"
 echo "   Finished"
 echo "#################################"

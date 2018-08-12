@@ -378,6 +378,17 @@ exit 0
 #CUMULUS-AUTOPROVISIONING
 EOT
 
+## NetQ agent
+echo " ### Install NetQ Agent ###"
+cat << EOF > /etc/apt/sources.list.d/netq.list
+deb https://apps3.cumulusnetworks.com/repos/deb CumulusLinux-3 netq-1.3
+EOF
+apt update
+apt-get install -y cumulus-netq
+netq config add server 192.168.0.254
+netq config add experimental
+netq config restart agent
+
 echo "############################################"
 echo "      DONE!"
 echo "############################################"
