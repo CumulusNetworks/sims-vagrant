@@ -18,7 +18,7 @@ NAME=$(basename $(realpath $PWD))
 ssh-keygen -q -R $NAME
 ssh-keygen -q -R $ADDR
 sed -ie "/Host $NAME/,/^ *$/D" ${HOME}/.ssh/config
-cat << EOF >> ${HOME}.ssh/config
+cat << EOF >> ${HOME}/.ssh/config
 Host $NAME
     HostName $ADDR
     User cumulus
