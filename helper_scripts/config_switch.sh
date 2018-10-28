@@ -5,10 +5,6 @@ echo "  Running Extra_Switch_Config.sh"
 echo "#################################"
 sudo su
 
-## DHCP
-echo " ### Make DHCP behave better ###"
-echo "retry 1;" >> /etc/dhcp/dhclient.conf
-echo "timeout 1800;" >> /etc/dhcp/dhclient.conf
 
 ## Networking
 echo " ### Baseline Interface file ###"
@@ -23,6 +19,10 @@ auto eth0
 iface eth0 inet dhcp
 
 EOT
+
+# get DHCP working correctly
+echo "retry 1;" >> /etc/dhcp/dhclient.conf
+echo "timeout 1800;" >> /etc/dhcp/dhclient.conf
 
 ## Convenience code. This is normally done in ZTP.
 echo "cumulus ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/10_cumulus

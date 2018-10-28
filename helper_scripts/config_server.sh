@@ -13,12 +13,17 @@ sudo systemctl disable apt-daily.service
 sudo systemctl disable apt-daily.timer
 
 #Replace existing network interfaces file
-echo -e "auto lo" > /etc/network/interfaces
-echo -e "iface lo inet loopback\n\n" >> /etc/network/interfaces
+cat << EOF > /etc/network/interfaces
+auto lo
+iface lo inet loopback
 
-#Add vagrant interface
-echo -e "\n\nauto eth0" >> /etc/network/interfaces
-echo -e "iface eth0 inet dhcp\n\n" >> /etc/network/interfaces
+auto eth0
+iface eth0 inet dhcp
+EOF
+
+# get DHCP working correctly
+echo "retry 1;" >> /etc/dhcp/dhclient.conf
+echo "timeout 1800;" >> /etc/dhcp/dhclient.conf
 
 useradd cumulus -m -s /bin/bash
 echo "cumulus:CumulusLinux!" | chpasswd

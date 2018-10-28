@@ -57,6 +57,10 @@ iface eth1
 
 EOT
 
+# get DHCP working correctly
+echo "retry 1;" >> /etc/dhcp/dhclient.conf
+echo "timeout 1800;" >> /etc/dhcp/dhclient.conf
+
 ## DNS
 echo " ### Overwriting DNS Server to 8.8.8.8 ###"
 #Required because the installation of DNSmasq throws off DNS momentarily
