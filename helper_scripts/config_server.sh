@@ -33,6 +33,7 @@ chown -R cumulus:cumulus /home/cumulus
 chmod 600 /home/cumulus/.ssh/*
 chmod 700 /home/cumulus/.ssh
 
+export DEBIAN_FRONTEND=noninteractive
 
 # Other stuff
 ping 8.8.8.8 -c2

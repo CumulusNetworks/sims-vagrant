@@ -38,6 +38,7 @@ echo " ### Install NetQ Agent ###"
 cat << EOF > /etc/apt/sources.list.d/netq.list
 deb https://apps3.cumulusnetworks.com/repos/deb CumulusLinux-3 netq-1.3
 EOF
+export DEBIAN_FRONTEND=noninteractive
 apt update
 apt-get install -y cumulus-netq
 netq config add server 192.168.0.254

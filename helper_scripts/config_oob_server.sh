@@ -18,7 +18,7 @@ ansible_version=2.3.1.0
 #######################
 
 
-## MOTD
+#-------------------------------------------------------------------------------
 echo " ### Overwriting MOTD ###"
 cat <<EOT > /etc/motd.base64
 ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIF8NChtbMDs0
@@ -40,7 +40,7 @@ base64 -d /etc/motd.base64 > /etc/motd
 rm /etc/motd.base64
 chmod 755 /etc/motd
 
-## INTERFACES
+#-------------------------------------------------------------------------------
 echo " ### Overwriting /etc/network/interfaces ###"
 cat <<EOT > /etc/network/interfaces
 auto lo
@@ -57,12 +57,12 @@ iface eth1
 
 EOT
 
-## DNS
+#-------------------------------------------------------------------------------
 echo " ### Overwriting DNS Server to 8.8.8.8 ###"
 #Required because the installation of DNSmasq throws off DNS momentarily
 echo "nameserver 8.8.8.8" > /etc/resolv.conf
 
-## Software
+#-------------------------------------------------------------------------------
 echo " ### Adding Jessie Repository... ###"
 cat << EOT > /etc/apt/sources.list.d/jessie.list
 deb  http://deb.debian.org/debian jessie main
@@ -72,12 +72,20 @@ deb  http://deb.debian.org/debian jessie-updates main
 deb-src  http://deb.debian.org/debian jessie-updates main
 EOT
 
+#-------------------------------------------------------------------------------
+echo " ### Fix bug in 1.4.0 Telemetry Server"
+sed -ie "s%rohbuild03.mvlab%apps3%" -e "s%/dev/%/repos/%" /etc/apt/sources.list.d/cumulus-apps.list
+
+#-------------------------------------------------------------------------------
 echo " ### Updating APT Repository... ###"
+export DEBIAN_FRONTEND=noninteractive
 apt-get update -y
 
+#-------------------------------------------------------------------------------
 echo " ### Installing Packages... ###"
 apt-get install -qy htop isc-dhcp-server tree apache2 git python-pip dnsmasq apt-cacher-ng ntpdate vim libffi6=3.1-2+deb8u1
 
+#-------------------------------------------------------------------------------
 echo " ### Installing Ansible... ###"
 cat << EOF > /etc/apt/sources.list.d/ansible.list
 deb http://ppa.launchpad.net/ansible/ansible/ubuntu trusty main
@@ -86,7 +94,7 @@ apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 93C4A3FD7BB9C367
 apt-get update
 apt install -qy ansible
 
-## NTP
+#-------------------------------------------------------------------------------
 echo " ### Configure NTP... ###"
 cat <<EOT > /etc/ntp.conf
 driftfile /var/lib/ntp/ntp.drift
@@ -106,10 +114,9 @@ restrict 127.0.0.1
 restrict ::1
 EOT
 
-## SSH
+#-------------------------------------------------------------------------------
 echo " ### Creating SSH keys for cumulus user ###"
 mkdir /home/cumulus/.ssh
-#/usr/bin/ssh-keygen -b 2048 -t rsa -f /home/cumulus/.ssh/id_rsa -q -N ""
 cat <<EOT > /home/cumulus/.ssh/id_rsa
 -----BEGIN RSA PRIVATE KEY-----
 MIIEpAIBAAKCAQEAsx/kflIY1YnFLSNHWjVHHnWIX74E9XW2V4GN9yG5uDDqPl/O
@@ -145,7 +152,6 @@ EOT
 
 cp /home/cumulus/.ssh/id_rsa.pub /home/cumulus/.ssh/authorized_keys
 
-# Copying Vagrant Insecure Key In
 echo "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA6NF8iallvQVp22WDkTkyrtvp9eWW6A8YVr+kz4TjGYe7gHzIw+niNltGEFHzD8+v1I2YJ6oXevct1YeS0o9HZyN1Q9qgCgzUFtdOKLv6IedplqoPkcmF0aYet2PkEDo3MlTBckFXPITAMzF8dJSIFo9D8HfdOV0IAdx4O7PtixWKn5y2hMNG0zQPyUecp4pzC6kivAIhyfHilFR61RGL+GPXQ2MWZWFYbAGjyiYJnAmCP3NOTd0jMZEnDkbUvxhMmBYSdETk1rRgm+R4LOzFUGaHqHDLKLX+FIPKcF96hrucXzcWyLbIbEgE98OHlnVYCzRdK8jlqm8tehUc9c9WhQ== vagrant insecure public key" > /home/vagrant/.ssh/authorized_keys
 echo "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA6NF8iallvQVp22WDkTkyrtvp9eWW6A8YVr+kz4TjGYe7gHzIw+niNltGEFHzD8+v1I2YJ6oXevct1YeS0o9HZyN1Q9qgCgzUFtdOKLv6IedplqoPkcmF0aYet2PkEDo3MlTBckFXPITAMzF8dJSIFo9D8HfdOV0IAdx4O7PtixWKn5y2hMNG0zQPyUecp4pzC6kivAIhyfHilFR61RGL+GPXQ2MWZWFYbAGjyiYJnAmCP3NOTd0jMZEnDkbUvxhMmBYSdETk1rRgm+R4LOzFUGaHqHDLKLX+FIPKcF96hrucXzcWyLbIbEgE98OHlnVYCzRdK8jlqm8tehUc9c9WhQ== vagrant insecure public key" >> /home/cumulus/.ssh/authorized_keys
 echo -e "sudo su - cumulus\nexit" >> /home/vagrant/.bashrc
@@ -156,22 +162,23 @@ chmod 700 /home/cumulus/.ssh/
 chmod 600 /home/cumulus/.ssh/*
 chown cumulus:cumulus /home/cumulus/.ssh/*
 
-## HTTP
+#-------------------------------------------------------------------------------
+echo "### Set up HTTP"
 echo "<html><h1>You've come to the $HOSTNAME.</h1></html>" > /var/www/html/index.html
 echo "Copying Key into /var/www/html..."
 cp /home/cumulus/.ssh/id_rsa.pub /var/www/html/authorized_keys
 chmod 777 -R /var/www/html/*
 
-## SUDO
-echo " ### Making cumulus passwordless sudo ###"
+#-------------------------------------------------------------------------------
+echo " ### Making cumulus passwordless sudo"
 echo "cumulus ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/10_cumulus
 
-## NAT
+#-------------------------------------------------------------------------------
 echo ' ### Setting UP NAT and Routing on MGMT server... ### '
 echo -e '#!/bin/bash \n/sbin/iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE' > /etc/rc.local
 echo "net.ipv4.ip_forward=1" > /etc/sysctl.d/98-ipforward.conf
 
-## ANSIBLE
+#-------------------------------------------------------------------------------
 echo " ### Pushing Ansible Hosts File ###"
 mkdir -p /etc/ansible
 cat << EOT > /etc/ansible/hosts
@@ -200,7 +207,7 @@ server02 ansible_host=192.168.0.32 ansible_user=cumulus
 server04 ansible_host=192.168.0.34 ansible_user=cumulus
 EOT
 
-## DHCP
+#-------------------------------------------------------------------------------
 echo " ### Pushing DHCP File ###"
 cat << EOT > /etc/dhcp/dhcpd.conf
 ddns-update-style none;
@@ -260,6 +267,7 @@ subnet 192.168.0.0 netmask 255.255.255.0 {
 include "/etc/dhcp/dhcpd.hosts";
 EOT
 
+#-------------------------------------------------------------------------------
 echo " ### Push DHCP Host Config ###"
 cat << EOT > /etc/dhcp/dhcpd.hosts
 group {
@@ -307,7 +315,7 @@ chmod 755 -R /etc/dhcp/*
 systemctl enable dhcpd
 systemctl restart dhcpd
 
-## LOCAL DNS
+#-------------------------------------------------------------------------------
 echo " ### Push Hosts File ###"
 cat << EOT > /etc/hosts
 127.0.0.1 localhost 
@@ -340,7 +348,7 @@ EOT
 systemctl enable dnsmasq.service
 systemctl start dnsmasq.service
 
-## ZTP
+#-------------------------------------------------------------------------------
 echo " ### Pushing ZTP Script ###"
 cat << EOT > /var/www/html/ztp_oob.sh
 #!/bin/bash
@@ -378,7 +386,7 @@ exit 0
 #CUMULUS-AUTOPROVISIONING
 EOT
 
-## NetQ agent
+#-------------------------------------------------------------------------------
 echo " ### Install NetQ Agent ###"
 cat << EOF > /etc/apt/sources.list.d/netq.list
 deb https://apps3.cumulusnetworks.com/repos/deb CumulusLinux-3 netq-1.3
@@ -389,6 +397,7 @@ netq config add server 192.168.0.254
 netq config add experimental
 netq config restart agent
 
+#-------------------------------------------------------------------------------
 echo "############################################"
 echo "      DONE!"
 echo "############################################"
