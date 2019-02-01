@@ -1,0 +1,8 @@
+#! /bin/bash
+
+vagrant up oob-mgmt-server
+vagrant up oob-mgmt-switch
+vagrant up /spine*/
+vagrant up /leaf*/
+vagrant up /server*/
+vagrant up
