@@ -74,7 +74,7 @@ EOT
 
 #-------------------------------------------------------------------------------
 echo " ### Fix bug in 1.4.0 Telemetry Server"
-sed -ie "s%rohbuild03.mvlab%apps3%" -e "s%/dev/%/repos/%" /etc/apt/sources.list.d/cumulus-apps.list
+sed -i -e "s%rohbuild03.mvlab%apps3%" -e "s%/dev/%/repos/%" /etc/apt/sources.list.d/cumulus-apps.list
 
 #-------------------------------------------------------------------------------
 echo " ### Updating APT Repository... ###"
